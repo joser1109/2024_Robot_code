@@ -144,7 +144,7 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
+    setDriveMotors(Xboob.getLeftY(),Xboob.getRightX());
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
   @Override
