@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
-import com.revrobotics.CANSparkMax; 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 //The shit above this is stuff imported from the REVLIB vender library
 /**
@@ -34,7 +35,7 @@ CANSparkMax RightTopSpark = new CANSparkMax(3, MotorType.kBrushless);
 CANSparkMax RightBottomSpark = new CANSparkMax(4, MotorType.kBrushless);
 //The shity motors now have a name and a set number
 
-XboxController Xboob = new XboxController(1);
+XboxController Xboob = new XboxController(0);
 //The Xbox controller is now the Xboob🤤🤤🤤
 
 public void setDriveMotors(double forward, double turn) {
@@ -51,6 +52,12 @@ LeftTopSpark.set(left);
 LeftBottomSpark.set(left);
 RightTopSpark.set(right);
 RightBottomSpark.set(right);
+
+LeftTopSpark.setOpenLoopRampRate(0.8);
+LeftBottomSpark.setOpenLoopRampRate(0.8);
+RightTopSpark.setOpenLoopRampRate(0.8);
+RightBottomSpark.setOpenLoopRampRate(0.8);
+
 }
 /**Okay so everything above just tells the motors what to do in teleoperated
 */
@@ -64,6 +71,10 @@ RightBottomSpark.set(right);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
+    LeftTopSpark.setInverted(false);
+    LeftBottomSpark.setInverted(false);
+
+
   }
 
   /**
@@ -84,10 +95,19 @@ RightBottomSpark.set(right);
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    LeftTopSpark.set(0);
+    LeftBottomSpark.set(0);
+    RightTopSpark.set(0);
+    RightBottomSpark.set(0);    
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {    
+    LeftTopSpark.setIdleMode(IdleMode.kCoast);
+    LeftBottomSpark.setIdleMode(IdleMode.kCoast);
+    RightTopSpark.setIdleMode(IdleMode.kCoast);
+    RightBottomSpark.setIdleMode(IdleMode.kCoast);}
 
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
@@ -106,6 +126,12 @@ RightBottomSpark.set(right);
 
   @Override
   public void teleopInit() {
+
+    LeftTopSpark.setIdleMode(IdleMode.kBrake);
+    LeftBottomSpark.setIdleMode(IdleMode.kBrake);
+    RightTopSpark.setIdleMode(IdleMode.kBrake);
+    RightBottomSpark.setIdleMode(IdleMode.kBrake
+    );
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -118,9 +144,9 @@ RightBottomSpark.set(right);
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getLeftY(), Xboob.getRightX());
+    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
   }
-
+//The shit above this is simply put the motors getting input from the controller joysticks
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
