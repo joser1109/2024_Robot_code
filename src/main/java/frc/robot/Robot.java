@@ -33,6 +33,8 @@ CANSparkMax LeftTopSpark = new CANSparkMax(1, MotorType.kBrushless);
 CANSparkMax LeftBottomSpark = new CANSparkMax(2, MotorType.kBrushless);
 CANSparkMax RightTopSpark = new CANSparkMax(3, MotorType.kBrushless);
 CANSparkMax RightBottomSpark = new CANSparkMax(4, MotorType.kBrushless);
+CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
+CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
 //The shity motors now have a name and a set number
 
 XboxController Xboob = new XboxController(0);
@@ -145,6 +147,23 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
   @Override
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
+  
+    if (Xboob.getAButton()) {
+      MotoMoto.set(0.75);
+    } else if (Xboob.getBButton()) {
+      MotoMoto.set(-0.75);
+    } else {
+      MotoMoto.set(0);
+    }
+  
+    if (Xboob.getYButton()) {
+      MotorMotor.set(0.75);
+    } else if (Xboob.getXButton()) {
+      MotorMotor.set(-0.75);
+    } else {
+      MotorMotor.set(0);
+    }
+
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
   @Override
