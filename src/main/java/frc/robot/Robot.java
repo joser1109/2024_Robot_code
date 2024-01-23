@@ -33,8 +33,12 @@ CANSparkMax LeftTopSpark = new CANSparkMax(1, MotorType.kBrushless);
 CANSparkMax LeftBottomSpark = new CANSparkMax(2, MotorType.kBrushless);
 CANSparkMax RightTopSpark = new CANSparkMax(3, MotorType.kBrushless);
 CANSparkMax RightBottomSpark = new CANSparkMax(4, MotorType.kBrushless);
+ //The motors above are for tank drive
 CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
 CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
+CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
+CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
+ //Motors for sucking and shooting
 //The shity motors now have a name and a set number
 
 XboxController Xboob = new XboxController(0);
@@ -101,7 +105,13 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
     LeftTopSpark.set(0);
     LeftBottomSpark.set(0);
     RightTopSpark.set(0);
-    RightBottomSpark.set(0);    
+    RightBottomSpark.set(0);  
+    //The motors above are for tank drive
+    MotoMoto.set(0);
+    MotorMotor.set(0);  
+    Janet.set(0);
+    Brock.set(0);
+    //Motors for sucking and shooting
   }
 
   @Override
@@ -162,6 +172,23 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
       MotorMotor.set(-0.75);
     } else {
       MotorMotor.set(0);
+    }
+
+
+    if (Xboob.getAButton()) {
+      Janet.set(-0.75);
+    } else if (Xboob.getBButton()) {
+      Janet.set(0.75);
+    } else {
+      Janet.set(0);
+    }
+  
+    if (Xboob.getYButton()) {
+      Brock.set(-0.75);
+    } else if (Xboob.getXButton()) {
+      Brock.set(0.75);
+    } else {
+      Brock.set(0);
     }
 
   }
