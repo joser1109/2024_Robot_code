@@ -65,7 +65,24 @@ RightTopSpark.setOpenLoopRampRate(0.8);
 RightBottomSpark.setOpenLoopRampRate(0.8);
 
 }
-/**Okay so everything above just tells the motors what to do in teleoperated
+
+public void suckysucky (double suck , double unsuck) {
+  SmartDashboard.putNumber("drive suck power (%)", suck);
+  SmartDashboard.putNumber("drive unsuck power (%)", unsuck);
+
+  double supersuck = suck + unsuck;
+ 
+  MotoMoto.set(supersuck);
+  MotorMotor.set(supersuck);
+  Brock.set(-supersuck);
+  Janet.set(-supersuck);
+MotoMoto.setOpenLoopRampRate(15);
+MotorMotor.setOpenLoopRampRate(0);
+Janet.setOpenLoopRampRate(0.8);
+Brock.setOpenLoopRampRate(15);
+
+}
+/**Okay so  above just tells the motors what to do in teleoperated
 */
 
   /**
@@ -79,7 +96,7 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
     m_robotContainer = new RobotContainer();
     LeftTopSpark.setInverted(false);
     LeftBottomSpark.setInverted(false);
-
+      
 
   }
 
@@ -157,39 +174,7 @@ RightBottomSpark.setOpenLoopRampRate(0.8);
   @Override
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
-  
-    if (Xboob.getAButton()) {
-      MotoMoto.set(0.75);
-    } else if (Xboob.getBButton()) {
-      MotoMoto.set(-0.75);
-    } else {
-      MotoMoto.set(0);
-    }
-  
-    if (Xboob.getYButton()) {
-      MotorMotor.set(0.75);
-    } else if (Xboob.getXButton()) {
-      MotorMotor.set(-0.75);
-    } else {
-      MotorMotor.set(0);
-    }
-
-
-    if (Xboob.getAButton()) {
-      Janet.set(-0.75);
-    } else if (Xboob.getBButton()) {
-      Janet.set(0.75);
-    } else {
-      Janet.set(0);
-    }
-  
-    if (Xboob.getYButton()) {
-      Brock.set(-0.75);
-    } else if (Xboob.getXButton()) {
-      Brock.set(0.75);
-    } else {
-      Brock.set(0);
-    }
+    suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
 
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
