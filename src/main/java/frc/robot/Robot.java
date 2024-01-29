@@ -39,6 +39,8 @@ CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
 CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
 CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
  //Motors for sucking and shooting
+CANSparkMax Frosty = new CANSparkMax(9, MotorType.kBrushless);
+CANSparkMax SnowyGrabby = new CANSparkMax(10, MotorType.kBrushless);
 //The shity motors now have a name and a set number
 
 XboxController Xboob = new XboxController(0);
@@ -175,6 +177,14 @@ Brock.setOpenLoopRampRate(15);
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
+
+    if (Xboob.getAButton()) {
+      Frosty.set(0.75);
+    } else if (Xboob.getBButton()) {
+      Frosty.set(-0.75);
+    } else {
+      Frosty.set(0);
+    }
 
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
