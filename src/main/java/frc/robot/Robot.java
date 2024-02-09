@@ -12,9 +12,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 //The shit above this is stuff imported from the REVLIB vender library
+import com.playingwithfusion.CANVenom;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -27,20 +27,16 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-
-
-CANSparkMax LeftTopSpark = new CANSparkMax(1, MotorType.kBrushless);
-CANSparkMax LeftBottomSpark = new CANSparkMax(2, MotorType.kBrushless);
-CANSparkMax RightTopSpark = new CANSparkMax(3, MotorType.kBrushless);
-CANSparkMax RightBottomSpark = new CANSparkMax(4, MotorType.kBrushless);
+CANVenom Shrek = new CANVenom(1);
+CANVenom Vessel = new CANVenom(2);
+CANVenom Wyatt = new CANVenom(3);
+CANVenom Furry = new CANVenom(4); 
  //The motors above are for tank drive
 CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
 CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
 CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
 CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
  //Motors for sucking and shooting
-CANSparkMax Frosty = new CANSparkMax(9, MotorType.kBrushless);
-CANSparkMax SnowyGrabby = new CANSparkMax(10, MotorType.kBrushless);
 //The shity motors now have a name and a set number
 
 XboxController Xboob = new XboxController(0);
@@ -56,15 +52,12 @@ double right = forward + turn;
 SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
-LeftTopSpark.set(left);
-LeftBottomSpark.set(left);
-RightTopSpark.set(right);
-RightBottomSpark.set(right);
+Shrek.set(left);
+Vessel.set(left);
+Wyatt.set(right);
+Furry.set(right);
 
-LeftTopSpark.setOpenLoopRampRate(0.8);
-LeftBottomSpark.setOpenLoopRampRate(0.8);
-RightTopSpark.setOpenLoopRampRate(0.8);
-RightBottomSpark.setOpenLoopRampRate(0.8);
+
 
 }
 
@@ -96,8 +89,7 @@ Brock.setOpenLoopRampRate(15);
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    LeftTopSpark.setInverted(false);
-    LeftBottomSpark.setInverted(false);
+    
       
 
   }
@@ -121,10 +113,10 @@ Brock.setOpenLoopRampRate(15);
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    LeftTopSpark.set(0);
-    LeftBottomSpark.set(0);
-    RightTopSpark.set(0);
-    RightBottomSpark.set(0);  
+    Shrek.set(0);
+    Vessel.set(0);
+    Wyatt.set(0);
+    Furry.set(0);  
     //The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);  
@@ -135,11 +127,8 @@ Brock.setOpenLoopRampRate(15);
 
   @Override
   public void disabledPeriodic() {    
-    LeftTopSpark.setIdleMode(IdleMode.kCoast);
-    LeftBottomSpark.setIdleMode(IdleMode.kCoast);
-    RightTopSpark.setIdleMode(IdleMode.kCoast);
-    RightBottomSpark.setIdleMode(IdleMode.kCoast);}
-
+   
+}
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
@@ -158,11 +147,7 @@ Brock.setOpenLoopRampRate(15);
   @Override
   public void teleopInit() {
 
-    LeftTopSpark.setIdleMode(IdleMode.kBrake);
-    LeftBottomSpark.setIdleMode(IdleMode.kBrake);
-    RightTopSpark.setIdleMode(IdleMode.kBrake);
-    RightBottomSpark.setIdleMode(IdleMode.kBrake
-    );
+    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -177,14 +162,6 @@ Brock.setOpenLoopRampRate(15);
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
-
-    if (Xboob.getAButton()) {
-      Frosty.set(0.75);
-    } else if (Xboob.getBButton()) {
-      Frosty.set(-0.75);
-    } else {
-      Frosty.set(0);
-    }
 
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
