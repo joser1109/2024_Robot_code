@@ -39,6 +39,7 @@ CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
  //Motors for sucking and shooting
 //The shity motors now have a name and a set number
 
+
 XboxController Xboob = new XboxController(0);
 //The Xbox controller is now the Xboob🤤🤤🤤
 
@@ -52,12 +53,12 @@ double right = forward + turn;
 SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
-Shrek.set(left);
-Vessel.set(left);
+Shrek.set(right);
+Vessel.set(right);
 Wyatt.set(right);
 Furry.set(right);
 
-
+ 
 
 }
 
@@ -132,12 +133,48 @@ Brock.setOpenLoopRampRate(15);
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
+    
+    Shrek.set(0.10);
+    Vessel.set(0.10);
+    Wyatt.set(0.10);
+    Furry.set(0.10);
+    
+   
+    Shrek.setInverted(true);
+    Vessel.setInverted(true);
+    Wyatt.setInverted(false);
+    Furry.setInverted(false);
+    try { Thread.sleep(2000);
+    } catch (InterruptedException b) {
+    b.printStackTrace();
     }
+
+   
+
+
+
+    Shrek.set(0.10);
+    Vessel.set(0.10);
+    Wyatt.set(0.10);
+    Furry.set(0.10);
+
+    ;
+
+    Shrek.setInverted(false);
+    Vessel.setInverted(false);
+    Wyatt.setInverted(true);
+    Furry.setInverted(true);
+ try { Thread.sleep(10000);
+} catch (InterruptedException e) {
+  e.printStackTrace();
+}
+    Shrek.set(0);
+    Vessel.set(0);
+    Wyatt.set(0);
+    Furry.set(0);
+
+
+
   }
 
   /** This function is called periodically during autonomous. */
@@ -146,6 +183,11 @@ Brock.setOpenLoopRampRate(15);
 
   @Override
   public void teleopInit() {
+
+  Shrek.setMaxAcceleration(60);
+  Vessel.setMaxAcceleration(60);
+  Wyatt.setMaxAcceleration(60);
+  Furry.setMaxAcceleration(60);
 
     
     // This makes sure that the autonomous stops running when
