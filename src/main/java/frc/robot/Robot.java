@@ -12,9 +12,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 //The shit above this is stuff imported from the REVLIB vender library
 import com.playingwithfusion.CANVenom;
+import com.playingwithfusion.CANVenom.BrakeCoastMode;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -34,9 +36,10 @@ CANVenom Furry = new CANVenom(4);
  //The motors above are for tank drive
 CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
 CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
-CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
+CANSparkMax Mommy = new CANSparkMax(7, MotorType.kBrushless);
 CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
- //Motors for sucking and shooting
+CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
+//Motors for sucking and shooting
 //The shity motors now have a name and a set number
 
 
@@ -58,8 +61,6 @@ Vessel.set(right);
 Wyatt.set(right);
 Furry.set(right);
 
- 
-
 }
 
 public void suckysucky (double suck , double unsuck) {
@@ -71,10 +72,10 @@ public void suckysucky (double suck , double unsuck) {
   MotoMoto.set(supersuck);
   MotorMotor.set(supersuck);
   Brock.set(-supersuck);
-  Janet.set(-supersuck);
+  Mommy.set(-supersuck);
 MotoMoto.setOpenLoopRampRate(15);
 MotorMotor.setOpenLoopRampRate(0);
-Janet.setOpenLoopRampRate(0.8);
+Mommy.setOpenLoopRampRate(0.8);
 Brock.setOpenLoopRampRate(15);
 
 }
@@ -114,20 +115,30 @@ Brock.setOpenLoopRampRate(15);
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Shrek.set(0);
-    Vessel.set(0);
-    Wyatt.set(0);
-    Furry.set(0);  
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake); 
     //The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);  
-    Janet.set(0);
+    Mommy.set(0);
     Brock.set(0);
     //Motors for sucking and shooting
   }
 
   @Override
-  public void disabledPeriodic() {    
+  public void disabledPeriodic() { 
+    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+    Vessel.setBrakeCoastMode(BrakeCoastMode.Coast);
+    Wyatt.setBrakeCoastMode(BrakeCoastMode.Coast);
+    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+       //The motors above are for tank drive
+       MotoMoto.setIdleMode(IdleMode.kBrake);
+       MotorMotor.setIdleMode(IdleMode.kBrake);
+       Mommy.setIdleMode(IdleMode.kBrake);
+       Brock.setIdleMode(IdleMode.kBrake);
+       //The motors above are for sucking and shooting
    
 }
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
@@ -189,6 +200,7 @@ Brock.setOpenLoopRampRate(15);
   Wyatt.setMaxAcceleration(60);
   Furry.setMaxAcceleration(60);
 
+ 
     
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -202,9 +214,29 @@ Brock.setOpenLoopRampRate(15);
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
+    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
 
+    
+    if (Xboob.getAButton()) {
+      MotoMoto.set(0.75);
+      MotorMotor.set(0.75);
+      Brock.set(0.75);
+      Mommy.set(0.75);
+      SnowBlower.set(0.75);
+    } else if (Xboob.getBButton()) {
+      MotoMoto.set(-0.75);
+      MotorMotor.set(-0.75);
+      Brock.set(-0.75);
+      Mommy.set(-0.75);
+      SnowBlower.set(-0.75);     
+    } else {
+     MotoMoto.set(0);
+      MotorMotor.set(0);
+      Brock.set(0);
+      Mommy.set(0);
+      SnowBlower.set(0);
+    }
   }
 //The shit above this is simply put the motors getting input from the controller joysticks
   @Override
