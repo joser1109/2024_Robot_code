@@ -220,21 +220,17 @@ Brock.setOpenLoopRampRate(15);
     
     if (Xboob.getAButton()) {
       MotoMoto.set(0.75);
-      MotorMotor.set(0.75);
-      Brock.set(0.75);
-      Mommy.set(0.75);
+    
+      Brock.set(-0.75);
+    
       SnowBlower.set(0.75);
     } else if (Xboob.getBButton()) {
       MotoMoto.set(-0.75);
-      MotorMotor.set(-0.75);
-      Brock.set(-0.75);
-      Mommy.set(-0.75);
+   
+      Brock.set(0.75);
+    
       SnowBlower.set(-0.75);     
     } else {
-     MotoMoto.set(0);
-      MotorMotor.set(0);
-      Brock.set(0);
-      Mommy.set(0);
       SnowBlower.set(0);
     }
   }
