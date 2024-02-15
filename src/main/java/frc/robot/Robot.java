@@ -9,11 +9,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
+
+
 //The shit above this is stuff imported from the REVLIB vender library
 import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
@@ -24,6 +27,7 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
  * project.
  */
 
+ 
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -39,6 +43,7 @@ CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
 CANSparkMax Mommy = new CANSparkMax(7, MotorType.kBrushless);
 CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
 CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
+
 //Motors for sucking and shooting
 //The shity motors now have a name and a set number
 
@@ -56,9 +61,9 @@ double right = forward + turn;
 SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
-Shrek.set(right);
+Shrek.set(left);
 Vessel.set(right);
-Wyatt.set(right);
+Wyatt.set(left);
 Furry.set(right);
 
 }
@@ -73,10 +78,10 @@ public void suckysucky (double suck , double unsuck) {
   MotorMotor.set(supersuck);
   Brock.set(-supersuck);
   Mommy.set(-supersuck);
-MotoMoto.setOpenLoopRampRate(15);
+MotoMoto.setOpenLoopRampRate(5);
 MotorMotor.setOpenLoopRampRate(0);
-Mommy.setOpenLoopRampRate(0.8);
-Brock.setOpenLoopRampRate(15);
+Mommy.setOpenLoopRampRate(0);
+Brock.setOpenLoopRampRate(5);
 
 }
 /**Okay so  above just tells the motors what to do in teleoperated
@@ -179,10 +184,10 @@ Brock.setOpenLoopRampRate(15);
 } catch (InterruptedException e) {
   e.printStackTrace();
 }
-    Shrek.set(0);
-    Vessel.set(0);
-    Wyatt.set(0);
-    Furry.set(0);
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
 
 
 
@@ -219,16 +224,12 @@ Brock.setOpenLoopRampRate(15);
 
     
     if (Xboob.getAButton()) {
-      MotoMoto.set(0.75);
-    
-      Brock.set(-0.75);
-    
+      MotoMoto.set(0.35);
+      Brock.set(-0.35);    
       SnowBlower.set(0.75);
     } else if (Xboob.getBButton()) {
-      MotoMoto.set(-0.75);
-   
-      Brock.set(0.75);
-    
+      MotoMoto.set(0.35);   
+      Brock.set(-0.35);   
       SnowBlower.set(-0.75);     
     } else {
       SnowBlower.set(0);
