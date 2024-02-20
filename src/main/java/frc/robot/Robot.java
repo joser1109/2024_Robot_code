@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
@@ -30,10 +30,11 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
  
 
 public class Robot extends TimedRobot {
+  private static double Start = 0;
+
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
-CANVenom Shrek = new CANVenom(1);
+  CANVenom Shrek = new CANVenom(1);
 CANVenom Vessel = new CANVenom(2);
 CANVenom Wyatt = new CANVenom(3);
 CANVenom Furry = new CANVenom(4); 
@@ -62,8 +63,8 @@ SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
 Shrek.set(left);
-Vessel.set(right);
-Wyatt.set(left);
+Vessel.set(left);
+Wyatt.set(right);
 Furry.set(right);
 
 }
@@ -93,9 +94,7 @@ Brock.setOpenLoopRampRate(5);
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    new RobotContainer();
     
       
 
@@ -110,12 +109,17 @@ Brock.setOpenLoopRampRate(5);
    */
   @Override
   public void robotPeriodic() {
+
+
+    SmartDashboard.putNumber("Time (seconds)", Timer.getFPGATimestamp());
+  }
+    double autonomousStartTime;
+   
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-    CommandScheduler.getInstance().run();
-  }
+  
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
@@ -150,60 +154,36 @@ Brock.setOpenLoopRampRate(5);
   @Override
   public void autonomousInit() {
     
-    Shrek.set(0.10);
-    Vessel.set(0.10);
-    Wyatt.set(0.10);
-    Furry.set(0.10);
-    
-   
-    Shrek.setInverted(true);
-    Vessel.setInverted(true);
-    Wyatt.setInverted(false);
-    Furry.setInverted(false);
-    try { Thread.sleep(2000);
-    } catch (InterruptedException b) {
-    b.printStackTrace();
-    }
+  Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
+  Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
+  Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
+  Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
 
-   
-
-
-
-    Shrek.set(0.10);
-    Vessel.set(0.10);
-    Wyatt.set(0.10);
-    Furry.set(0.10);
-
-    ;
-
-    Shrek.setInverted(false);
-    Vessel.setInverted(false);
-    Wyatt.setInverted(true);
-    Furry.setInverted(true);
- try { Thread.sleep(10000);
-} catch (InterruptedException e) {
-  e.printStackTrace();
-}
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
-
-
-
+  Start = 8;
+  autonomousStartTime = Timer.
+getFPGATimestamp();
   }
 
   /** This function is called periodically during autonomous. */
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+  /*  double timeElapsed = Timer.
+    getFPGATimestamp() - autonomousStartTime;
+  
+
+if(timeElapsed > Start){
+    MotoMoto.set(1);
+  MotorMotor.set(1);
+  Brock.set(-0.1);
+  Mommy.set(-0.1);
+ }  */
+  } 
+    
 
   @Override
   public void teleopInit() {
 
-  Shrek.setMaxAcceleration(60);
-  Vessel.setMaxAcceleration(60);
-  Wyatt.setMaxAcceleration(60);
-  Furry.setMaxAcceleration(60);
+
 
  
     
@@ -219,18 +199,18 @@ Brock.setOpenLoopRampRate(5);
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
+    setDriveMotors(Xboob.getLeftY(), Xboob.getRightX());
     suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
 
     
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);    
-      SnowBlower.set(0.75);
+      SnowBlower.set(1);
     } else if (Xboob.getBButton()) {
       MotoMoto.set(0.35);   
       Brock.set(-0.35);   
-      SnowBlower.set(-0.75);     
+      SnowBlower.set(-1);     
     } else {
       SnowBlower.set(0);
     }
