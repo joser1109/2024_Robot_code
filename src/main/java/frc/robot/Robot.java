@@ -20,6 +20,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 //The shit above this is stuff imported from the REVLIB vender library
 import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
+// import com.playingwithfusion.CANVenom.ControlMode;
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -27,17 +28,16 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
  * project.
  */
 
- 
 
 public class Robot extends TimedRobot {
   private static double Start = 0;
-
+  
   private Command m_autonomousCommand;
 
-  CANVenom Shrek = new CANVenom(1);
-CANVenom Vessel = new CANVenom(2);
-CANVenom Wyatt = new CANVenom(3);
-CANVenom Furry = new CANVenom(4); 
+  CANVenom FrontMotorRight = new CANVenom(1);
+CANVenom  RearMotorRight = new CANVenom(2);
+CANVenom RearMotorLeft = new CANVenom(3);
+CANVenom FrontMotorLeft = new CANVenom(4); 
  //The motors above are for tank drive
 CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
 CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
@@ -62,10 +62,13 @@ double right = forward + turn;
 SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
-Shrek.set(left);
-Vessel.set(left);
-Wyatt.set(right);
-Furry.set(right);
+
+
+FrontMotorLeft.set(left);
+RearMotorLeft.follow(FrontMotorLeft);
+FrontMotorRight.set(right);
+RearMotorRight.follow(FrontMotorRight);
+
 
 }
 
@@ -94,9 +97,13 @@ Brock.setOpenLoopRampRate(5);
    */
   @Override
   public void robotInit() {
-    new RobotContainer();
-    
-      
+    new RobotContainer();   
+  
+  FrontMotorRight.set( 5000 );
+  RearMotorRight.follow( FrontMotorRight ); 
+
+  FrontMotorLeft.set( 5000 );
+  RearMotorLeft.follow( FrontMotorRight ); 
 
   }
 
@@ -124,10 +131,12 @@ Brock.setOpenLoopRampRate(5);
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake); 
+    
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.follow( FrontMotorLeft );
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.follow( FrontMotorRight );
+
     //The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);  
@@ -138,10 +147,10 @@ Brock.setOpenLoopRampRate(5);
 
   @Override
   public void disabledPeriodic() { 
-    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
+    RearMotorLeft.follow( FrontMotorLeft );
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
+    RearMotorRight.follow( FrontMotorRight );
        //The motors above are for tank drive
        MotoMoto.setIdleMode(IdleMode.kBrake);
        MotorMotor.setIdleMode(IdleMode.kBrake);
@@ -154,10 +163,10 @@ Brock.setOpenLoopRampRate(5);
   @Override
   public void autonomousInit() {
     
-  Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.follow( FrontMotorLeft );
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.follow( FrontMotorRight );
 
   Start = 8;
   autonomousStartTime = Timer.
@@ -167,16 +176,28 @@ getFPGATimestamp();
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-  /*  double timeElapsed = Timer.
+
+    double timeElapsed = Timer.
     getFPGATimestamp() - autonomousStartTime;
   
 
 if(timeElapsed > Start){
-    MotoMoto.set(1);
+  MotoMoto.set(1);
   MotorMotor.set(1);
   Brock.set(-0.1);
   Mommy.set(-0.1);
- }  */
+ } 
+
+ if(timeElapsed == Start){
+   FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
+   RearMotorLeft.follow( FrontMotorLeft );
+
+   FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
+   RearMotorRight.follow( FrontMotorRight );
+
+   
+ }
+
   } 
     
 
