@@ -31,10 +31,10 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  CANVenom Shrek = new CANVenom(1);
-  CANVenom Vessel = new CANVenom(2);
-  CANVenom Wyatt = new CANVenom(3);
-  CANVenom Furry = new CANVenom(4);
+  CANVenom FrontMotorRight = new CANVenom(1);
+  CANVenom RearMotorRight = new CANVenom(2);
+  CANVenom RearMotorLeft = new CANVenom(3);
+  CANVenom FrontMotorLeft = new CANVenom(4); 
   // The motors above are for tank drive
   CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
   CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
@@ -56,10 +56,10 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("drive turn power (%)", left);
     SmartDashboard.putNumber("drive turn power (%)", right);
 
-    Shrek.set(left);
-    Vessel.follow(Shrek);
-    Wyatt.set(right);
-    Furry.follow(Wyatt);
+    FrontMotorLeft.set(left);
+    RearMotorLeft.follow(FrontMotorLeft);
+    FrontMotorRight.set(right);
+    RearMotorRight.follow(FrontMotorRight);
 
   }
 
@@ -120,10 +120,10 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
     // The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);
@@ -135,10 +135,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Coast);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
+    RearMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
+    RearMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
     // The motors above are for tank drive
     MotoMoto.setIdleMode(IdleMode.kBrake);
     MotorMotor.setIdleMode(IdleMode.kBrake);
@@ -153,10 +153,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
   }
 
   /** This function is called periodically during autonomous. */
