@@ -9,17 +9,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
-
 //The shit above this is stuff imported from the REVLIB vender library
 import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
+
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -27,30 +25,27 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
  * project.
  */
 
- 
 
 public class Robot extends TimedRobot {
-  private static double Start = 0;
-
   private Command m_autonomousCommand;
 
-  CANVenom Shrek = new CANVenom(1);
+  private RobotContainer m_robotContainer;
+CANVenom Shrek = new CANVenom(1);
 CANVenom Vessel = new CANVenom(2);
 CANVenom Wyatt = new CANVenom(3);
 CANVenom Furry = new CANVenom(4); 
  //The motors above are for tank drive
 CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
 CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
-CANSparkMax Mommy = new CANSparkMax(7, MotorType.kBrushless);
+CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
 CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
-CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
-
-//Motors for sucking and shooting
+ //Motors for sucking and shooting
 //The shity motors now have a name and a set number
-
-
+CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
 XboxController Xboob = new XboxController(0);
 //The Xbox controller is now the Xboob🤤🤤🤤
+
+
 
 public void setDriveMotors(double forward, double turn) {
 SmartDashboard.putNumber("drive forward power (%)", forward);
@@ -63,9 +58,11 @@ SmartDashboard.putNumber("drive turn power (%)", left);
 SmartDashboard.putNumber("drive turn power (%)", right);
 
 Shrek.set(left);
-Vessel.set(left);
+Vessel.follow(Shrek);
 Wyatt.set(right);
-Furry.set(right);
+Furry.follow(Wyatt);
+
+
 
 }
 
@@ -78,11 +75,11 @@ public void suckysucky (double suck , double unsuck) {
   MotoMoto.set(supersuck);
   MotorMotor.set(supersuck);
   Brock.set(-supersuck);
-  Mommy.set(-supersuck);
-MotoMoto.setOpenLoopRampRate(5);
+  Janet.set(-supersuck);
+MotoMoto.setOpenLoopRampRate(15);
 MotorMotor.setOpenLoopRampRate(0);
-Mommy.setOpenLoopRampRate(0);
-Brock.setOpenLoopRampRate(5);
+Janet.setOpenLoopRampRate(0.8);
+Brock.setOpenLoopRampRate(15);
 
 }
 /**Okay so  above just tells the motors what to do in teleoperated
@@ -94,7 +91,9 @@ Brock.setOpenLoopRampRate(5);
    */
   @Override
   public void robotInit() {
-    new RobotContainer();
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
     
       
 
@@ -109,17 +108,12 @@ Brock.setOpenLoopRampRate(5);
    */
   @Override
   public void robotPeriodic() {
-
-
-    SmartDashboard.putNumber("Time (seconds)", Timer.getFPGATimestamp());
-  }
-    double autonomousStartTime;
-   
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,
     // and running subsystem periodic() methods.  This must be called from the robot's periodic
     // block in order for anything in the Command-based framework to work.
-  
+    CommandScheduler.getInstance().run();
+  }
 
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
@@ -127,65 +121,56 @@ Brock.setOpenLoopRampRate(5);
     Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
     Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
     Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake); 
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);   
     //The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);  
-    Mommy.set(0);
+    Janet.set(0);
     Brock.set(0);
     //Motors for sucking and shooting
   }
 
   @Override
-  public void disabledPeriodic() { 
-    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+  public void disabledPeriodic() {  
+    
+      Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
     Vessel.setBrakeCoastMode(BrakeCoastMode.Coast);
     Wyatt.setBrakeCoastMode(BrakeCoastMode.Coast);
     Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
        //The motors above are for tank drive
        MotoMoto.setIdleMode(IdleMode.kBrake);
        MotorMotor.setIdleMode(IdleMode.kBrake);
-       Mommy.setIdleMode(IdleMode.kBrake);
+       Janet.setIdleMode(IdleMode.kBrake);
        Brock.setIdleMode(IdleMode.kBrake);
-       //The motors above are for sucking and shooting
    
 }
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    
-  Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-  Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
-
-  Start = 8;
-  autonomousStartTime = Timer.
-getFPGATimestamp();
+    Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
   }
 
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-  /*  double timeElapsed = Timer.
-    getFPGATimestamp() - autonomousStartTime;
-  
-
-if(timeElapsed > Start){
-    MotoMoto.set(1);
-  MotorMotor.set(1);
-  Brock.set(-0.1);
-  Mommy.set(-0.1);
- }  */
-  } 
+    /*  double timeElapsed = Timer.
+      getFPGATimestamp() - autonomousStartTime;
     
+  
+  if(timeElapsed > Start){
+      MotoMoto.set(1);
+    MotorMotor.set(1);
+    Brock.set(-0.1);
+    Mommy.set(-0.1);
+   }  */
+    } 
 
   @Override
   public void teleopInit() {
 
-
-
- 
     
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
@@ -199,10 +184,8 @@ if(timeElapsed > Start){
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getLeftY(), Xboob.getRightX());
+    setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
-
-    
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);    
