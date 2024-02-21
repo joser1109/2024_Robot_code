@@ -19,98 +19,104 @@ import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
-
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-CANVenom Shrek = new CANVenom(1);
-CANVenom Vessel = new CANVenom(2);
-CANVenom Wyatt = new CANVenom(3);
-CANVenom Furry = new CANVenom(4); 
- //The motors above are for tank drive
-CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
-CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
-CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
-CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
- //Motors for sucking and shooting
-//The shity motors now have a name and a set number
-CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
-XboxController Xboob = new XboxController(0);
-//The Xbox controller is now the Xboob🤤🤤🤤
+  CANVenom Shrek = new CANVenom(1);
+  CANVenom Vessel = new CANVenom(2);
+  CANVenom Wyatt = new CANVenom(3);
+  CANVenom Furry = new CANVenom(4);
+  // The motors above are for tank drive
+  CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
+  CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
+  CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
+  CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
+  // Motors for sucking and shooting
+  // The shity motors now have a name and a set number
+  CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
+  XboxController Xboob = new XboxController(0);
+  // The Xbox controller is now the Xboob🤤🤤🤤
 
+  public void setDriveMotors(double forward, double turn) {
+    SmartDashboard.putNumber("drive forward power (%)", forward);
+    SmartDashboard.putNumber("drive turn power (%)", turn);
 
+    double left = forward - turn;
+    double right = forward + turn;
 
-public void setDriveMotors(double forward, double turn) {
-SmartDashboard.putNumber("drive forward power (%)", forward);
-SmartDashboard.putNumber("drive turn power (%)", turn);
+    SmartDashboard.putNumber("drive turn power (%)", left);
+    SmartDashboard.putNumber("drive turn power (%)", right);
 
-double left = forward - turn;
-double right = forward + turn;
+    Shrek.set(left);
+    Vessel.follow(Shrek);
+    Wyatt.set(right);
+    Furry.follow(Wyatt);
 
-SmartDashboard.putNumber("drive turn power (%)", left);
-SmartDashboard.putNumber("drive turn power (%)", right);
+  }
 
-Shrek.set(left);
-Vessel.follow(Shrek);
-Wyatt.set(right);
-Furry.follow(Wyatt);
+  public void suckysucky(double suck, double unsuck) {
+    SmartDashboard.putNumber("drive suck power (%)", suck);
+    SmartDashboard.putNumber("drive unsuck power (%)", unsuck);
 
+    double supersuck = suck + unsuck;
 
-
-}
-
-public void suckysucky (double suck , double unsuck) {
-  SmartDashboard.putNumber("drive suck power (%)", suck);
-  SmartDashboard.putNumber("drive unsuck power (%)", unsuck);
-
-  double supersuck = suck + unsuck;
- 
-  MotoMoto.set(supersuck);
-  MotorMotor.set(supersuck);
-  Brock.set(-supersuck);
-  Janet.set(-supersuck);
-MotoMoto.setOpenLoopRampRate(15);
-MotorMotor.setOpenLoopRampRate(0);
-Janet.setOpenLoopRampRate(0.8);
-Brock.setOpenLoopRampRate(15);
-
-}
-/**Okay so  above just tells the motors what to do in teleoperated
-*/
-
-  /**
-   * This function is run when the robot is first started up and should be used for any
-   * initialization code.
-   */
-  @Override
-  public void robotInit() {
-    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
-    
-      
+    MotoMoto.set(supersuck);
+    MotorMotor.set(supersuck);
+    Brock.set(-supersuck);
+    Janet.set(-supersuck);
+    MotoMoto.setOpenLoopRampRate(15);
+    MotorMotor.setOpenLoopRampRate(0);
+    Janet.setOpenLoopRampRate(0.8);
+    Brock.setOpenLoopRampRate(15);
 
   }
 
   /**
-   * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
+   * Okay so above just tells the motors what to do in teleoperated
+   */
+
+  /**
+   * This function is run when the robot is first started up and should be used
+   * for any
+   * initialization code.
+   */
+  @Override
+  public void robotInit() {
+    // Instantiate our RobotContainer. This will perform all our button bindings,
+    // and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
+
+  }
+
+  /**
+   * This function is called every 20 ms, no matter the mode. Use this for items
+   * like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
    *
-   * <p>This runs after the mode specific periodic functions, but before LiveWindow and
+   * <p>
+   * This runs after the mode specific periodic functions, but before LiveWindow
+   * and
    * SmartDashboard integrated updating.
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
-    // commands, running already-scheduled commands, removing finished or interrupted commands,
-    // and running subsystem periodic() methods.  This must be called from the robot's periodic
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled
+    // commands, running already-scheduled commands, removing finished or
+    // interrupted commands,
+    // and running subsystem periodic() methods. This must be called from the
+    // robot's periodic
     // block in order for anything in the Command-based framework to work.
     CommandScheduler.getInstance().run();
   }
@@ -121,30 +127,34 @@ Brock.setOpenLoopRampRate(15);
     Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
     Vessel.setBrakeCoastMode(BrakeCoastMode.Brake);
     Wyatt.setBrakeCoastMode(BrakeCoastMode.Brake);
-    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);   
-    //The motors above are for tank drive
+    Furry.setBrakeCoastMode(BrakeCoastMode.Brake);
+    // The motors above are for tank drive
     MotoMoto.set(0);
-    MotorMotor.set(0);  
+    MotorMotor.set(0);
     Janet.set(0);
     Brock.set(0);
-    //Motors for sucking and shooting
+    // Motors for sucking and shooting
   }
 
   @Override
-  public void disabledPeriodic() {  
-    
-      Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
+  public void disabledPeriodic() {
+
+    Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
     Vessel.setBrakeCoastMode(BrakeCoastMode.Coast);
     Wyatt.setBrakeCoastMode(BrakeCoastMode.Coast);
     Furry.setBrakeCoastMode(BrakeCoastMode.Coast);
-       //The motors above are for tank drive
-       MotoMoto.setIdleMode(IdleMode.kBrake);
-       MotorMotor.setIdleMode(IdleMode.kBrake);
-       Janet.setIdleMode(IdleMode.kBrake);
-       Brock.setIdleMode(IdleMode.kBrake);
-   
-}
-  /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
+    // The motors above are for tank drive
+    MotoMoto.setIdleMode(IdleMode.kBrake);
+    MotorMotor.setIdleMode(IdleMode.kBrake);
+    Janet.setIdleMode(IdleMode.kBrake);
+    Brock.setIdleMode(IdleMode.kBrake);
+
+  }
+
+  /**
+   * This autonomous runs the autonomous command selected by your
+   * {@link RobotContainer} class.
+   */
   @Override
   public void autonomousInit() {
     Shrek.setBrakeCoastMode(BrakeCoastMode.Brake);
@@ -156,22 +166,23 @@ Brock.setOpenLoopRampRate(15);
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    /*  double timeElapsed = Timer.
-      getFPGATimestamp() - autonomousStartTime;
-    
-  
-  if(timeElapsed > Start){
-      MotoMoto.set(1);
-    MotorMotor.set(1);
-    Brock.set(-0.1);
-    Mommy.set(-0.1);
-   }  */
-    } 
+    /*
+     * double timeElapsed = Timer.
+     * getFPGATimestamp() - autonomousStartTime;
+     * 
+     * 
+     * if(timeElapsed > Start){
+     * MotoMoto.set(1);
+     * MotorMotor.set(1);
+     * Brock.set(-0.1);
+     * Mommy.set(-0.1);
+     * }
+     */
+  }
 
   @Override
   public void teleopInit() {
 
-    
     // This makes sure that the autonomous stops running when
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
@@ -184,21 +195,23 @@ Brock.setOpenLoopRampRate(15);
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(),-Xboob.getLeftY());
-    suckysucky(Xboob.getLeftTriggerAxis(),-Xboob.getRightTriggerAxis());
+    setDriveMotors(Xboob.getRightX(), -Xboob.getLeftY());
+    suckysucky(Xboob.getLeftTriggerAxis(), -Xboob.getRightTriggerAxis());
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
-      Brock.set(-0.35);    
+      Brock.set(-0.35);
       SnowBlower.set(1);
     } else if (Xboob.getBButton()) {
-      MotoMoto.set(0.35);   
-      Brock.set(-0.35);   
-      SnowBlower.set(-1);     
+      MotoMoto.set(0.35);
+      Brock.set(-0.35);
+      SnowBlower.set(-1);
     } else {
       SnowBlower.set(0);
     }
   }
-//The shit above this is simply put the motors getting input from the controller joysticks
+
+  // The shit above this is simply put the motors getting input from the
+  // controller joysticks
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
@@ -207,13 +220,16 @@ Brock.setOpenLoopRampRate(15);
 
   /** This function is called periodically during test mode. */
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+  }
 
   /** This function is called once when the robot is first started up. */
   @Override
-  public void simulationInit() {}
+  public void simulationInit() {
+  }
 
   /** This function is called periodically whilst in simulation. */
   @Override
-  public void simulationPeriodic() {}
+  public void simulationPeriodic() {
+  }
 }
