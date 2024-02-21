@@ -31,7 +31,6 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
-  private RobotContainer m_robotContainer;
   CANVenom Shrek = new CANVenom(1);
   CANVenom Vessel = new CANVenom(2);
   CANVenom Wyatt = new CANVenom(3);
@@ -92,10 +91,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    // Instantiate our RobotContainer. This will perform all our button bindings,
-    // and put our
-    // autonomous chooser on the dashboard.
-    m_robotContainer = new RobotContainer();
+    new RobotContainer();
 
   }
 
