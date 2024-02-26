@@ -53,7 +53,7 @@ public class Robot extends TimedRobot {
   CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
-  CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushless);
+  CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
@@ -227,12 +227,12 @@ public class Robot extends TimedRobot {
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-      SnowBlower.set(1);
+      InputMotor.set(1);
     } else if (Xboob.getBButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
     } else {
-      SnowBlower.set(0);
+      InputMotor.set(0);
     }
 
     if (Xboob.getXButton()) {
@@ -240,14 +240,14 @@ public class Robot extends TimedRobot {
       Janet.set(-0.35);
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-      SnowBlower.set(0);
+      InputMotor.set(0);
     } else if (Xboob.getYButton()) {
       MotorMotor.set(-0.35);
       Janet.set(0.35);
       MotoMoto.set(-0.35);
       Brock.set(0.35);
     } else {
-      SnowBlower.set(0);
+      InputMotor.set(0);
     }
 
     if (Xboob.getLeftBumper()) {
