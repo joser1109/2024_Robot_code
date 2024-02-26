@@ -9,6 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticHub;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
@@ -31,6 +35,13 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
+  private static final int PH_CAN_ID = 11;
+  PneumaticHub m_ph = new PneumaticHub(PH_CAN_ID);
+  private static final int SOLENOID_CHANNEL = 3;
+  Solenoid m_Solenoid = m_ph.makeSolenoid(SOLENOID_CHANNEL);
+
+  DoubleSolenoid exampleDouble = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
+
   CANVenom FrontMotorRight = new CANVenom(1);
   CANVenom RearMotorRight = new CANVenom(2);
   CANVenom RearMotorLeft = new CANVenom(3);
@@ -42,7 +53,7 @@ public class Robot extends TimedRobot {
   CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
-  CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushed);
+  CANSparkMax SnowBlower = new CANSparkMax(9, MotorType.kBrushless);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
@@ -93,6 +104,13 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     new RobotContainer();
 
+    SmartDashboard.setDefaultBoolean("Enable Compressor Digital", false);
+    SmartDashboard.setDefaultBoolean("Disable Comptessor", false);
+
+
+    SmartDashboard.setDefaultBoolean("Set Solenoid", false);
+
+
   }
 
   /**
@@ -107,13 +125,25 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    // Runs the Scheduler. This is responsible for polling buttons, adding
-    // newly-scheduled
-    // commands, running already-scheduled commands, removing finished or
-    // interrupted commands,
-    // and running subsystem periodic() methods. This must be called from the
-    // robot's periodic
-    // block in order for anything in the Command-based framework to work.
+    SmartDashboard.putBoolean("Digital Pressure Switch", m_ph.getPressureSwitch());
+
+    SmartDashboard.putBoolean("Compressor Running", m_ph.getCompressor());
+
+    if (SmartDashboard.getBoolean("Enable Compressor", false)) {
+      SmartDashboard.putBoolean("Enable Compressor Digital", false);
+
+      m_ph.enableCompressorDigital();
+
+      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid.get());
+
+    }
+
+    if (SmartDashboard.getBoolean("Disable Compressor", false)) {
+      SmartDashboard.putBoolean("Disable Compressor", false);
+
+      m_ph.disableCompressor();
+    }
+
     CommandScheduler.getInstance().run();
   }
 
@@ -193,6 +223,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(), -Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(), -Xboob.getRightTriggerAxis());
+    
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
@@ -200,10 +231,32 @@ public class Robot extends TimedRobot {
     } else if (Xboob.getBButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-      SnowBlower.set(-1);
     } else {
       SnowBlower.set(0);
     }
+
+    if (Xboob.getXButton()) {
+      MotorMotor.set(0.35);
+      Janet.set(-0.35);
+      MotoMoto.set(0.35);
+      Brock.set(-0.35);
+      SnowBlower.set(0);
+    } else if (Xboob.getYButton()) {
+      MotorMotor.set(-0.35);
+      Janet.set(0.35);
+      MotoMoto.set(-0.35);
+      Brock.set(0.35);
+    } else {
+      SnowBlower.set(0);
+    }
+
+    if (Xboob.getLeftBumper()) {
+      exampleDouble.toggle();
+   }
+   
+
+    m_Solenoid.set(
+    SmartDashboard.setDefaultBoolean("Set Solenoid", false));
   }
 
   // The shit above this is simply put the motors getting input from the
