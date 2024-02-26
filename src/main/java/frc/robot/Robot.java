@@ -45,7 +45,7 @@ public class Robot extends TimedRobot {
   CANVenom FrontMotorRight = new CANVenom(1);
   CANVenom RearMotorRight = new CANVenom(2);
   CANVenom RearMotorLeft = new CANVenom(3);
-  CANVenom FrontMotorLeft = new CANVenom(4); 
+  CANVenom FrontMotorLeft = new CANVenom(4);
   // The motors above are for tank drive
   CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
   CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
@@ -107,9 +107,7 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultBoolean("Enable Compressor Digital", false);
     SmartDashboard.setDefaultBoolean("Disable Comptessor", false);
 
-
     SmartDashboard.setDefaultBoolean("Set Solenoid", false);
-
 
   }
 
@@ -223,7 +221,7 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     setDriveMotors(Xboob.getRightX(), -Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(), -Xboob.getRightTriggerAxis());
-    
+
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
@@ -252,11 +250,10 @@ public class Robot extends TimedRobot {
 
     if (Xboob.getLeftBumper()) {
       exampleDouble.toggle();
-   }
-   
+    }
 
     m_Solenoid.set(
-    SmartDashboard.setDefaultBoolean("Set Solenoid", false));
+        SmartDashboard.setDefaultBoolean("Set Solenoid", false));
   }
 
   // The shit above this is simply put the motors getting input from the
