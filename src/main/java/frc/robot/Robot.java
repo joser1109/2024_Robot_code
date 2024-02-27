@@ -190,18 +190,16 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
-    /*
-     * double timeElapsed = Timer.
-     * getFPGATimestamp() - autonomousStartTime;
-     * 
-     * 
-     * if(timeElapsed > Start){
-     * MotoMoto.set(1);
-     * MotorMotor.set(1);
-     * Brock.set(-0.1);
-     * Mommy.set(-0.1);
-     * }
-     */
+
+    FrontMotorLeft.set(0.10);
+    RearMotorLeft.follow(FrontMotorLeft);
+    FrontMotorRight.set(0.10);
+    RearMotorRight.follow(FrontMotorRight);  
+    
+    MotoMoto.set(0.10);
+    MotorMotor.set(0.10);
+    Janet.set(0.10);
+    Brock.set(0.10);
   }
 
   @Override
