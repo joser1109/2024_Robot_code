@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
@@ -190,17 +191,34 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    double elapsedTime = Timer.getMatchTime();
 
-    FrontMotorLeft.set(0.10);
-    RearMotorLeft.follow(FrontMotorLeft);
-    FrontMotorRight.set(0.10);
-    RearMotorRight.follow(FrontMotorRight);  
-    
-    MotoMoto.set(0.10);
-    MotorMotor.set(0.10);
-    Janet.set(0.10);
-    Brock.set(0.10);
-  }
+    // Run the first set of actions for the first 5 seconds
+    if (elapsedTime < 5.0) {
+        FrontMotorLeft.set(0.10);
+        RearMotorLeft.follow(FrontMotorLeft);
+        FrontMotorRight.set(0.10);
+        RearMotorRight.follow(FrontMotorRight);
+    }
+    // Run the second set of actions for the next 10 seconds
+    else if (elapsedTime < 15.0) {
+        MotoMoto.set(0.10);
+        MotorMotor.set(0.10);
+        Janet.set(0.10);
+        Brock.set(0.10);
+    }
+    // Stop all actions after 15 seconds
+    else {
+        FrontMotorLeft.set(0);
+        RearMotorLeft.follow(FrontMotorLeft);
+        FrontMotorRight.set(0);
+        RearMotorRight.follow(FrontMotorRight);
+        MotoMoto.set(0);
+        MotorMotor.set(0);
+        Janet.set(0);
+        Brock.set(0);
+    }
+}
 
   @Override
   public void teleopInit() {
