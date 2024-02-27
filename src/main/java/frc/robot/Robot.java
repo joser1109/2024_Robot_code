@@ -150,9 +150,9 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
-    RearMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.follow(FrontMotorLeft);
     FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
-    RearMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.follow(FrontMotorRight);
     // The motors above are for tank drive
     MotoMoto.set(0);
     MotorMotor.set(0);
@@ -164,10 +164,10 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledPeriodic() {
 
-    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
-    RearMotorLeft.setBrakeCoastMode(BrakeCoastMode.Coast);
-    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
-    RearMotorRight.setBrakeCoastMode(BrakeCoastMode.Coast);
+    FrontMotorLeft.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorLeft.follow(FrontMotorLeft);
+    FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
+    RearMotorRight.follow(FrontMotorRight);
     // The motors above are for tank drive
     MotoMoto.setIdleMode(IdleMode.kBrake);
     MotorMotor.setIdleMode(IdleMode.kBrake);
@@ -195,30 +195,30 @@ public class Robot extends TimedRobot {
 
     // Run the first set of actions for the first 5 seconds
     if (elapsedTime < 5.0) {
-        FrontMotorLeft.set(0.10);
-        RearMotorLeft.follow(FrontMotorLeft);
-        FrontMotorRight.set(0.10);
-        RearMotorRight.follow(FrontMotorRight);
+      FrontMotorLeft.set(0.10);
+      RearMotorLeft.follow(FrontMotorLeft);
+      FrontMotorRight.set(0.10);
+      RearMotorRight.follow(FrontMotorRight);
     }
     // Run the second set of actions for the next 10 seconds
     else if (elapsedTime < 15.0) {
-        MotoMoto.set(0.10);
-        MotorMotor.set(0.10);
-        Janet.set(0.10);
-        Brock.set(0.10);
+      MotoMoto.set(0.10);
+      MotorMotor.set(0.10);
+      Janet.set(0.10);
+      Brock.set(0.10);
     }
     // Stop all actions after 15 seconds
     else {
-        FrontMotorLeft.set(0);
-        RearMotorLeft.follow(FrontMotorLeft);
-        FrontMotorRight.set(0);
-        RearMotorRight.follow(FrontMotorRight);
-        MotoMoto.set(0);
-        MotorMotor.set(0);
-        Janet.set(0);
-        Brock.set(0);
+      FrontMotorLeft.set(0);
+      RearMotorLeft.follow(FrontMotorLeft);
+      FrontMotorRight.set(0);
+      RearMotorRight.follow(FrontMotorRight);
+      MotoMoto.set(0);
+      MotorMotor.set(0);
+      Janet.set(0);
+      Brock.set(0);
     }
-}
+  }
 
   @Override
   public void teleopInit() {
@@ -241,13 +241,13 @@ public class Robot extends TimedRobot {
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-            MotorMotor.set(0);
-             Janet.set(0);
+      MotorMotor.set(0);
+      Janet.set(0);
       InputMotor.set(-0.35);
     } else if (Xboob.getBButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-       MotorMotor.set(0);
+      MotorMotor.set(0);
       Janet.set(0);
       InputMotor.set(0.35);
     } else if (Xboob.getXButton()) {
@@ -256,16 +256,15 @@ public class Robot extends TimedRobot {
       Janet.set(-0.35);
       Brock.set(-0.35);
     } else if (Xboob.getYButton()) {
-       MotoMoto.set(0.35);
+      MotoMoto.set(0.35);
       MotorMotor.set(0.35);
       Janet.set(-0.35);
       Brock.set(-0.35);
     } else {
       InputMotor.set(0);
-    
+
     }
 
-   
   }
 
   // The shit above this is simply put the motors getting input from the
