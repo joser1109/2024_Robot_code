@@ -10,9 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 //The shit above this is already in the FRC WPILIBJ when you download it
 
@@ -38,11 +36,11 @@ public class Robot extends TimedRobot {
 
   private static final int PH_CAN_ID = 11;
   PneumaticHub m_ph = new PneumaticHub(PH_CAN_ID);
-  private static final int SOLENOID_CHANNEL = 3;
+  private static final int SOLENOID_CHANNEL = 1;
   Solenoid m_Solenoid = m_ph.makeSolenoid(SOLENOID_CHANNEL);
 
-  DoubleSolenoid exampleDouble = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, 0, 1);
 
+  
   CANVenom FrontMotorRight = new CANVenom(1);
   CANVenom RearMotorRight = new CANVenom(2);
   CANVenom RearMotorLeft = new CANVenom(3);
@@ -57,6 +55,11 @@ public class Robot extends TimedRobot {
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
+
+  public void toggleSolenoid() {
+    m_Solenoid.set(!m_Solenoid.get());
+}
+
 
   public void setDriveMotors(double forward, double turn) {
     SmartDashboard.putNumber("drive forward power (%)", forward);
@@ -262,6 +265,9 @@ public class Robot extends TimedRobot {
       Brock.set(-0.35);
     } else {
       InputMotor.set(0);
+
+      if (Xboob.getLeftBumper()) {
+        toggleSolenoid();}
 
     }
 
