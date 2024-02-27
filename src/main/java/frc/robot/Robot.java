@@ -84,10 +84,10 @@ public class Robot extends TimedRobot {
     MotorMotor.set(supersuck);
     Brock.set(-supersuck);
     Janet.set(-supersuck);
-    MotoMoto.setOpenLoopRampRate(15);
+    MotoMoto.setOpenLoopRampRate(0);
     MotorMotor.setOpenLoopRampRate(0);
-    Janet.setOpenLoopRampRate(0.8);
-    Brock.setOpenLoopRampRate(15);
+    Janet.setOpenLoopRampRate(0);
+    Brock.setOpenLoopRampRate(0);
 
   }
 
@@ -219,41 +219,37 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(), -Xboob.getLeftY());
+    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
     suckysucky(Xboob.getLeftTriggerAxis(), -Xboob.getRightTriggerAxis());
 
     if (Xboob.getAButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-      InputMotor.set(1);
+            MotorMotor.set(0);
+             Janet.set(0);
+      InputMotor.set(-0.35);
     } else if (Xboob.getBButton()) {
       MotoMoto.set(0.35);
       Brock.set(-0.35);
-    } else {
-      InputMotor.set(0);
-    }
-
-    if (Xboob.getXButton()) {
+       MotorMotor.set(0);
+      Janet.set(0);
+      InputMotor.set(0.35);
+    } else if (Xboob.getXButton()) {
+      MotoMoto.set(0.35);
       MotorMotor.set(0.35);
       Janet.set(-0.35);
-      MotoMoto.set(0.35);
       Brock.set(-0.35);
-      InputMotor.set(0);
     } else if (Xboob.getYButton()) {
-      MotorMotor.set(-0.35);
-      Janet.set(0.35);
-      MotoMoto.set(-0.35);
-      Brock.set(0.35);
+       MotoMoto.set(0.35);
+      MotorMotor.set(0.35);
+      Janet.set(-0.35);
+      Brock.set(-0.35);
     } else {
       InputMotor.set(0);
+    
     }
 
-    if (Xboob.getLeftBumper()) {
-      exampleDouble.toggle();
-    }
-
-    m_Solenoid.set(
-        SmartDashboard.setDefaultBoolean("Set Solenoid", false));
+   
   }
 
   // The shit above this is simply put the motors getting input from the
