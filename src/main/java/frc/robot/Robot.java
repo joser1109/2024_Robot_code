@@ -36,8 +36,10 @@ public class Robot extends TimedRobot {
 
   private static final int PH_CAN_ID = 11;
   PneumaticHub m_ph = new PneumaticHub(PH_CAN_ID);
-  private static final int SOLENOID_CHANNEL = 1;
-  Solenoid m_Solenoid = m_ph.makeSolenoid(SOLENOID_CHANNEL);
+  private static final int SOLENOID_CHANNEL1 = 1;
+  Solenoid m_Solenoid1 = m_ph.makeSolenoid(SOLENOID_CHANNEL1);
+  private static final int SOLENOID_CHANNEL0 = 0;
+  Solenoid m_Solenoid0 = m_ph.makeSolenoid(SOLENOID_CHANNEL0);
 
 
   
@@ -53,11 +55,13 @@ public class Robot extends TimedRobot {
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
+  CANSparkMax LiftyUppy = new CANSparkMax(10, MotorType.kBrushless);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
   public void toggleSolenoid() {
-    m_Solenoid.set(!m_Solenoid.get());
+    m_Solenoid0.set(!m_Solenoid0.get());
+    m_Solenoid1.set(!m_Solenoid1.get());
 }
 
 
@@ -136,8 +140,8 @@ public class Robot extends TimedRobot {
 
       m_ph.enableCompressorDigital();
 
-      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid.get());
-
+      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid0.get());
+      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid1.get());
     }
 
     if (SmartDashboard.getBoolean("Disable Compressor", false)) {
@@ -267,8 +271,7 @@ public class Robot extends TimedRobot {
       InputMotor.set(0);
 
       if (Xboob.getLeftBumper()) {
-        toggleSolenoid();}
-
+        toggleSolenoid();} 
     }
 
   }
