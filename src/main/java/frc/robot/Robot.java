@@ -198,17 +198,17 @@ public class Robot extends TimedRobot {
 
     // Run the first set of actions for the first 5 seconds
     if (elapsedTime < 5.0) {
-      FrontMotorLeft.set(0.10);
+      FrontMotorLeft.set(-0.5);
       RearMotorLeft.follow(FrontMotorLeft);
-      FrontMotorRight.set(0.10);
+      FrontMotorRight.set(0.5);
       RearMotorRight.follow(FrontMotorRight);
     }
     // Run the second set of actions for the next 10 seconds
     else if (elapsedTime < 15.0) {
-      MotoMoto.set(0.10);
-      MotorMotor.set(0.10);
-      Janet.set(0.10);
-      Brock.set(0.10);
+      MotoMoto.set(0.5);
+      MotorMotor.set(0.5);
+      Janet.set(0.5);
+      Brock.set(0.5);
     }
     // Stop all actions after 15 seconds
     else {
