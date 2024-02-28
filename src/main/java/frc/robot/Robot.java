@@ -59,11 +59,13 @@ public class Robot extends TimedRobot {
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
-  public void toggleSolenoid() {
+  public void toggleSolenoid0() {
     m_Solenoid0.set(!m_Solenoid0.get());
-    m_Solenoid1.set(!m_Solenoid1.get());
+    
 }
-
+public void toggleSolenoid1() {
+  m_Solenoid1.set(!m_Solenoid1.get());
+}
 
   public void setDriveMotors(double forward, double turn) {
     SmartDashboard.putNumber("drive forward power (%)", forward);
@@ -271,7 +273,9 @@ public class Robot extends TimedRobot {
       InputMotor.set(0);
 
       if (Xboob.getLeftBumper()) {
-        toggleSolenoid();} 
+        toggleSolenoid0();} 
+    } if (Xboob.getRightBumper()) {
+      toggleSolenoid1();
     }
 
   }
