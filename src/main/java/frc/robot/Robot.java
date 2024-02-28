@@ -278,6 +278,13 @@ public void toggleSolenoid1() {
       toggleSolenoid1();
     }
 
+    if (Xboob.getStartButton()) {
+      LiftyUppy.set(0.25);
+    } else if (Xboob.getBackButton()) {
+     LiftyUppy.set(0.25);
+    } else {
+      LiftyUppy.set(0);
+    }
   }
 
   // The shit above this is simply put the motors getting input from the
