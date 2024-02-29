@@ -55,7 +55,7 @@ public class Robot extends TimedRobot {
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
-  CANSparkMax LiftyUppy = new CANSparkMax(10, MotorType.kBrushless);
+  CANSparkMax LiftyUppy = new CANSparkMax(10, MotorType.kBrushed);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
@@ -279,9 +279,9 @@ public void toggleSolenoid1() {
     }
 
     if (Xboob.getStartButton()) {
-      LiftyUppy.set(0.25);
+      LiftyUppy.set(-1);
     } else if (Xboob.getBackButton()) {
-     LiftyUppy.set(0.25);
+     LiftyUppy.set(-1);
     } else {
       LiftyUppy.set(0);
     }
