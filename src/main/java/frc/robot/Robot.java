@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
@@ -55,7 +56,7 @@ public class Robot extends TimedRobot {
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
-  CANSparkMax LiftyUppy = new CANSparkMax(10, MotorType.kBrushless);
+  Spark LiftyUppy = new Spark(1);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
