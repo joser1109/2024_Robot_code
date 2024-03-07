@@ -313,7 +313,7 @@ public void toggleSolenoid1() {
     }
 
     if (Xboob.getStartButton()) {
-      LiftyUppy.set(-1);
+      LiftyUppy.set(1);
     } else if (Xboob.getBackButton()) {
      LiftyUppy.set(-1);
     } else {
