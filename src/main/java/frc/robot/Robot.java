@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
-//The shit above this is already in the FRC WPILIBJ when you download it
+//The stuff above this is already in the FRC WPILIBJ when you download it
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-//The shit above this is stuff imported from the REVLIB vender library
+//The stuff above this is stuff imported from the REVLIB vender library
 import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
 
@@ -53,8 +53,8 @@ public class Robot extends TimedRobot {
   CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
   CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
   CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
-  // Motors for sucking and shooting
-  // The shity motors now have a name and a set number
+  // Motors for sucking and shooting the rings
+  // The motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
   Spark LiftyUppy = new Spark(0);
   XboxController Xboob = new XboxController(0);
@@ -168,7 +168,7 @@ public void toggleSolenoid1() {
     MotorMotor.set(0);
     Janet.set(0);
     Brock.set(0);
-    // Motors for sucking and shooting
+    // Motors for sucking and shooting the ring
   }
 
   @Override
@@ -270,6 +270,7 @@ public void toggleSolenoid1() {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    toggleSolenoid0(); 
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -292,7 +293,7 @@ public void toggleSolenoid1() {
       Brock.set(-0.35);
       MotorMotor.set(0);
       Janet.set(0);
-      InputMotor.set(0.35);
+      InputMotor.set(0.35);  
     } else if (Xboob.getXButton()) {
       MotoMoto.set(0.35);
       MotorMotor.set(0.35);
@@ -305,12 +306,12 @@ public void toggleSolenoid1() {
       Brock.set(-0.35);
     } else {
       InputMotor.set(0);
-
-      if (Xboob.getLeftBumper()) {
-        toggleSolenoid0();} 
-    } if (Xboob.getRightBumper()) {
-      toggleSolenoid1();
     }
+
+     if (Xboob.getLeftBumperPressed()) {
+        toggleSolenoid0();
+        toggleSolenoid1();
+      }
 
     if (Xboob.getStartButton()) {
       LiftyUppy.set(1);
@@ -321,7 +322,7 @@ public void toggleSolenoid1() {
     }
   }
 
-  // The shit above this is simply put the motors getting input from the
+  // The stuff above this is simply put the motors getting input from the
   // controller joysticks
   @Override
   public void testInit() {
