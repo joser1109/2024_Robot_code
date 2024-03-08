@@ -70,12 +70,39 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("drive turn power (%)", left);
     SmartDashboard.putNumber("drive turn power (%)", right);
 
-    FrontMotorLeft.set(left);
-    RearMotorLeft.follow(FrontMotorLeft);
-    FrontMotorRight.set(right);
-    RearMotorRight.follow(FrontMotorRight);
+    double rampRate = 0.1; // Adjust this value as needed
 
-  }
+    // Ramp up or down the left motor speed
+    double currentLeftSpeed = FrontMotorLeft.get();
+    if (Math.abs(left - currentLeftSpeed) > rampRate) {
+        if (left > currentLeftSpeed) {
+            currentLeftSpeed += rampRate;
+        } else {
+            currentLeftSpeed -= rampRate;
+        }
+    } else {
+        currentLeftSpeed = left;
+    }
+
+    // Ramp up or down the right motor speed
+    double currentRightSpeed = FrontMotorRight.get();
+    if (Math.abs(right - currentRightSpeed) > rampRate) {
+        if (right > currentRightSpeed) {
+            currentRightSpeed += rampRate;
+        } else {
+            currentRightSpeed -= rampRate;
+        }
+    } else {
+        currentRightSpeed = right;
+    }
+
+    // Set the motor speeds
+    FrontMotorLeft.set(currentLeftSpeed);
+    RearMotorLeft.follow(FrontMotorLeft);
+    FrontMotorRight.set(currentRightSpeed);
+    RearMotorRight.follow(FrontMotorRight);
+}
+
 
   public void suckysucky(double suck, double unsuck) {
     SmartDashboard.putNumber("drive suck power (%)", suck);
