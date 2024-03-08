@@ -11,9 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-import edu.wpi.first.wpilibj.Solenoid;
 //The shit above this is already in the FRC WPILIBJ when you download it
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -37,10 +38,6 @@ public class Robot extends TimedRobot {
 
   private static final int PH_CAN_ID = 11;
   PneumaticHub m_ph = new PneumaticHub(PH_CAN_ID);
-  private static final int SOLENOID_CHANNEL1 = 1;
-  Solenoid m_Solenoid1 = m_ph.makeSolenoid(SOLENOID_CHANNEL1);
-  private static final int SOLENOID_CHANNEL0 = 0;
-  Solenoid m_Solenoid0 = m_ph.makeSolenoid(SOLENOID_CHANNEL0);
 
 
   
@@ -53,20 +50,15 @@ public class Robot extends TimedRobot {
   CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
   CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
   CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
+
+  private final DoubleSolenoid m_doubleSolenoid =
+      new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
   Spark LiftyUppy = new Spark(0);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
-
-  public void toggleSolenoid0() {
-    m_Solenoid0.set(!m_Solenoid0.get());
-    
-}
-public void toggleSolenoid1() {
-  m_Solenoid1.set(!m_Solenoid1.get());
-}
 
   public void setDriveMotors(double forward, double turn) {
     SmartDashboard.putNumber("drive forward power (%)", forward);
@@ -143,8 +135,6 @@ public void toggleSolenoid1() {
 
       m_ph.enableCompressorDigital();
 
-      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid0.get());
-      SmartDashboard.putBoolean("Get Solenoid", m_Solenoid1.get());
     }
 
     if (SmartDashboard.getBoolean("Disable Compressor", false)) {
@@ -307,9 +297,10 @@ public void toggleSolenoid1() {
       InputMotor.set(0);
 
       if (Xboob.getLeftBumper()) {
-        toggleSolenoid0();} 
+        m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+      } 
     } if (Xboob.getRightBumper()) {
-      toggleSolenoid1();
+      m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
     if (Xboob.getStartButton()) {
