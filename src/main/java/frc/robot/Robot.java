@@ -13,9 +13,6 @@ import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
-//The shit above this is already in the FRC WPILIBJ when you download it
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -38,9 +35,10 @@ public class Robot extends TimedRobot {
 
   private static final int PH_CAN_ID = 11;
   PneumaticHub m_ph = new PneumaticHub(PH_CAN_ID);
+  public static int forwardChannel1 = 0;
+  public static int reverseChannel1 = 1;
+  DoubleSolenoid m_doubleSolenoid = m_ph.makeDoubleSolenoid(forwardChannel1, reverseChannel1);
 
-
-  
   CANVenom FrontMotorRight = new CANVenom(1);
   CANVenom RearMotorRight = new CANVenom(2);
   CANVenom RearMotorLeft = new CANVenom(3);
@@ -51,8 +49,6 @@ public class Robot extends TimedRobot {
   CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
   CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
 
-  private final DoubleSolenoid m_doubleSolenoid =
-      new DoubleSolenoid(PneumaticsModuleType.REVPH, 1, 2);
   // Motors for sucking and shooting
   // The shity motors now have a name and a set number
   CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
@@ -70,39 +66,12 @@ public class Robot extends TimedRobot {
     SmartDashboard.putNumber("drive turn power (%)", left);
     SmartDashboard.putNumber("drive turn power (%)", right);
 
-    double rampRate = 0.1; // Adjust this value as needed
-
-    // Ramp up or down the left motor speed
-    double currentLeftSpeed = FrontMotorLeft.get();
-    if (Math.abs(left - currentLeftSpeed) > rampRate) {
-        if (left > currentLeftSpeed) {
-            currentLeftSpeed += rampRate;
-        } else {
-            currentLeftSpeed -= rampRate;
-        }
-    } else {
-        currentLeftSpeed = left;
-    }
-
-    // Ramp up or down the right motor speed
-    double currentRightSpeed = FrontMotorRight.get();
-    if (Math.abs(right - currentRightSpeed) > rampRate) {
-        if (right > currentRightSpeed) {
-            currentRightSpeed += rampRate;
-        } else {
-            currentRightSpeed -= rampRate;
-        }
-    } else {
-        currentRightSpeed = right;
-    }
-
-    // Set the motor speeds
-    FrontMotorLeft.set(currentLeftSpeed);
+    FrontMotorLeft.set(left);
     RearMotorLeft.follow(FrontMotorLeft);
-    FrontMotorRight.set(currentRightSpeed);
+    FrontMotorRight.set(right);
     RearMotorRight.follow(FrontMotorRight);
-}
 
+  }
 
   public void suckysucky(double suck, double unsuck) {
     SmartDashboard.putNumber("drive suck power (%)", suck);
@@ -138,7 +107,9 @@ public class Robot extends TimedRobot {
     SmartDashboard.setDefaultBoolean("Disable Comptessor", false);
 
     SmartDashboard.setDefaultBoolean("Set Solenoid", false);
-
+    SmartDashboard.setDefaultBoolean("Set Off", false);
+    SmartDashboard.setDefaultBoolean("Set Forward", false);
+    SmartDashboard.setDefaultBoolean("Set Reverse", false);
   }
 
   /**
@@ -171,6 +142,21 @@ public class Robot extends TimedRobot {
     }
 
     CommandScheduler.getInstance().run();
+
+    switch (m_doubleSolenoid.get()) {
+      case kOff:
+        SmartDashboard.putString("Get Solenoid", "kOff");
+        break;
+      case kForward:
+        SmartDashboard.putString("Get Solenoid", "kForward");
+        break;
+      case kReverse:
+        SmartDashboard.putString("Get Solenoid", "kReverse");
+        break;
+      default:
+        SmartDashboard.putString("Get Solenoid", "N/A");
+        break;
+    }
   }
 
   /** This function is called once each time the robot enters Disabled mode. */
@@ -221,52 +207,27 @@ public class Robot extends TimedRobot {
     double elapsedTime = Timer.getMatchTime();
 
     // Run the first set of actions for the first 5 seconds
-    if (elapsedTime < 2.0) {
+    if (elapsedTime < 1) {
+      MotoMoto.set(0.5);
+      MotorMotor.set(0);
+      Janet.set(-0.5);
+      Brock.set(0);
+    }
+
+    if (elapsedTime < 3) {
       MotoMoto.set(0.5);
       MotorMotor.set(0.5);
-      Janet.set(0.5);
-      Brock.set(0.5);
+      Janet.set(-0.5);
+      Brock.set(-0.5);
     }
- else if (elapsedTime < 5.0) {
-     
-       FrontMotorLeft.set(0.3);
-      RearMotorLeft.follow(FrontMotorLeft);
-      FrontMotorRight.set(-0.3);
-      RearMotorRight.follow(FrontMotorRight);
-    }
-  else if (elapsedTime < 7.0) {
-      MotoMoto.set(-0.35);
-      Brock.set(0.35);
-      MotorMotor.set(0);
-      Janet.set(0);
-      InputMotor.set(0.35);
-       FrontMotorLeft.set(0.1);
-      RearMotorLeft.follow(FrontMotorLeft);
-      FrontMotorRight.set(-0.1);
-      RearMotorRight.follow(FrontMotorRight);
-    }
-    else if (elapsedTime < 11.0) {
-       FrontMotorLeft.set(-0.4);
+
+    if (elapsedTime < 7) {
+      FrontMotorLeft.set(-0.4);
       RearMotorLeft.follow(FrontMotorLeft);
       FrontMotorRight.set(0.4);
       RearMotorRight.follow(FrontMotorRight);
     }
-    else if (elapsedTime < 13.0) {
-      MotoMoto.set(0.5);
-      MotorMotor.set(0.5);
-      Janet.set(0.5);
-      Brock.set(0.5);
-    }
 
-
-    // Run the second set of actions for the next 10 seconds
-    else if (elapsedTime < 15.0) {
-     
-       FrontMotorLeft.set(0.1);
-      RearMotorLeft.follow(FrontMotorLeft);
-      FrontMotorRight.set(-0.1);
-      RearMotorRight.follow(FrontMotorRight);
-    }
     // Stop all actions after 15 seconds
     else {
       FrontMotorLeft.set(0);
@@ -322,21 +283,41 @@ public class Robot extends TimedRobot {
       Brock.set(-0.35);
     } else {
       InputMotor.set(0);
+    }
+    if (Xboob.getRawButton(5)) {
+      m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
 
-      if (Xboob.getLeftBumper()) {
-        m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-      } 
-    } if (Xboob.getRightBumper()) {
+    if (Xboob.getRawButton(6)) {
       m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
 
     if (Xboob.getStartButton()) {
       LiftyUppy.set(1);
+      LiftyUppy.setInverted(false);
     } else if (Xboob.getBackButton()) {
-     LiftyUppy.set(-1);
+      LiftyUppy.set(1);
+      LiftyUppy.setInverted(true);
     } else {
       LiftyUppy.set(0);
     }
+
+    if (SmartDashboard.getBoolean(
+        "Set Forward", false)) {
+      SmartDashboard.putBoolean(
+          "Set Forward", false);
+
+      m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
+    }
+
+    if (SmartDashboard.getBoolean(
+        "Set Reverse", false)) {
+      SmartDashboard.putBoolean("Set Reverse", false);
+
+      m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
+
+    }
+
   }
 
   // The shit above this is simply put the motors getting input from the
