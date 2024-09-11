@@ -5,12 +5,17 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticHub;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
 //The shit above this is stuff imported from the REVLIB vendor library
 import com.playingwithfusion.CANVenom;
 import com.playingwithfusion.CANVenom.BrakeCoastMode;
@@ -25,7 +30,7 @@ import com.playingwithfusion.CANVenom.BrakeCoastMode;
  * project.
  */
 
-public class Robot extends TimedRobot {
+public class ringrobot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private static final int PH_CAN_ID = 11;
@@ -38,9 +43,16 @@ public class Robot extends TimedRobot {
   CANVenom RearMotorRight = new CANVenom(2);
   CANVenom RearMotorLeft = new CANVenom(3);
   CANVenom FrontMotorLeft = new CANVenom(4);
+  // The motors above are for tank drive
+  CANSparkMax MotorMotor = new CANSparkMax(5, MotorType.kBrushless);
+  CANSparkMax MotoMoto = new CANSparkMax(6, MotorType.kBrushless);
+  CANSparkMax Janet = new CANSparkMax(7, MotorType.kBrushless);
+  CANSparkMax Brock = new CANSparkMax(8, MotorType.kBrushless);
 
   // Motors for sucking and shooting
   // The shitty motors now have a name and a set number
+  CANSparkMax InputMotor = new CANSparkMax(9, MotorType.kBrushless);
+  Spark LiftyUppy = new Spark(0);
   XboxController Xboob = new XboxController(0);
   // The Xbox controller is now the Xboob🤤🤤🤤
 
@@ -79,8 +91,9 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     new RobotContainer();
+
     SmartDashboard.setDefaultBoolean("Enable Compressor Digital", false);
-    SmartDashboard.setDefaultBoolean("Disable Comptessor", false);
+    SmartDashboard.setDefaultBoolean("Disable Compressor", false);
 
     SmartDashboard.setDefaultBoolean("Set Solenoid", false);
     SmartDashboard.setDefaultBoolean("Set Off", false);
@@ -141,6 +154,12 @@ public class Robot extends TimedRobot {
     RearMotorLeft.follow(FrontMotorLeft);
     FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
     RearMotorRight.follow(FrontMotorRight);
+    // The motors above are for tank drive
+    MotoMoto.set(0);
+    MotorMotor.set(0);
+    Janet.set(0);
+    Brock.set(0);
+    // Motors for sucking and shooting
   }
 
   @Override
@@ -150,6 +169,10 @@ public class Robot extends TimedRobot {
     FrontMotorRight.setBrakeCoastMode(BrakeCoastMode.Brake);
     RearMotorRight.follow(FrontMotorRight);
     // The motors above are for tank drive
+    MotoMoto.setIdleMode(IdleMode.kBrake);
+    MotorMotor.setIdleMode(IdleMode.kBrake);
+    Janet.setIdleMode(IdleMode.kBrake);
+    Brock.setIdleMode(IdleMode.kBrake);
   }
 
   /**
@@ -167,8 +190,41 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+    double elapsedTime = Timer.getMatchTime();
 
     // Run the first set of actions for the first 5 seconds
+    if (elapsedTime < 1) {
+      MotoMoto.set(0.5);
+      MotorMotor.set(0);
+      Janet.set(-0.5);
+      Brock.set(0);
+    }
+
+    if (elapsedTime < 3) {
+      MotoMoto.set(0.5);
+      MotorMotor.set(0.5);
+      Janet.set(-0.5);
+      Brock.set(-0.5);
+    }
+
+    if (elapsedTime < 7) {
+      FrontMotorLeft.set(-0.4);
+      RearMotorLeft.follow(FrontMotorLeft);
+      FrontMotorRight.set(0.4);
+      RearMotorRight.follow(FrontMotorRight);
+    }
+
+    // Stop all actions after 15 seconds
+    else {
+      FrontMotorLeft.set(0);
+      RearMotorLeft.follow(FrontMotorLeft);
+      FrontMotorRight.set(0);
+      RearMotorRight.follow(FrontMotorRight);
+      MotoMoto.set(0);
+      MotorMotor.set(0);
+      Janet.set(0);
+      Brock.set(0);
+    }
   }
 
   @Override
@@ -185,30 +241,47 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    setDriveMotors(Xboob.getRightX(), -Xboob.getLeftY());
-    if (Xboob.getRawButton(5)) {
+    setDriveMotors(Xboob.getRightX(), Xboob.getLeftY());
+
+    if (Xboob.getYButton()) {
+      MotoMoto.set(0.25);
+      Brock.set(-0.25);
+      MotorMotor.set(0);
+      Janet.set(0);
+      InputMotor.set(-0.25);
+    } else if (Xboob.getAButton()) {
+      MotoMoto.set(0.25);
+      Brock.set(-0.25);
+      MotorMotor.set(0);
+      Janet.set(0);
+      InputMotor.set(0.25);
+    } else if (Xboob.getRawButton(5)) {
+      MotoMoto.set(-0.25);
+      MotorMotor.set(-0.25);
+      Janet.set(0.25);
+      Brock.set(0.25);
+    } else if (Xboob.getRawButton(6)) {
+      MotoMoto.set(0.25);
+      MotorMotor.set(0.25);
+      Janet.set(-0.25);
+      Brock.set(-0.25);
+    } else {
+      InputMotor.set(0);
+      MotoMoto.set(0);
+      Brock.set(0);
+      MotorMotor.set(0);
+      Janet.set(0);
+    }
+
+    if (SmartDashboard.getBoolean("Set Forward", false)) {
+      SmartDashboard.putBoolean("Set Forward", false);
       m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
     }
-    if (Xboob.getRawButton(6)) {
+
+    if (SmartDashboard.getBoolean("Set Reverse", false)) {
+      SmartDashboard.putBoolean("Set Reverse", false);
       m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
     }
-
-    if (SmartDashboard.getBoolean(
-      "Set Forward", false)) {
-    SmartDashboard.putBoolean(
-        "Set Forward", false);
-
-    m_doubleSolenoid.set(DoubleSolenoid.Value.kForward);
-  }
-
-  if (SmartDashboard.getBoolean(
-      "Set Reverse", false)) {
-    SmartDashboard.putBoolean("Set Reverse", false);
-
-    m_doubleSolenoid.set(DoubleSolenoid.Value.kReverse);
-
-  }
-    
   }
 
   @Override
